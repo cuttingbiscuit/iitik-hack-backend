@@ -83,8 +83,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'iitik_hack_backend.wsgi.application'
-
+#WSGI_APPLICATION = 'iitik_hack_backend.wsgi.application'
+ASGI_APPLICATION = "iitik_hack_backend.routing.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -136,3 +136,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
