@@ -61,13 +61,12 @@ class Comment(models.Model):
     def __str__(self):
         return "%s" % self.id
 
-"""
-class StudentGroup(models.Model):
-    group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE, related_name='group_fk')
-    #user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='user_fk')
+# class StudentGroup(models.Model):
+#     group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE, related_name='group_fk')
+#     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='user_fk')
 
 
-class StudentDiscipline(models.Model):
-    discipline = models.ForeignKey(Discipline, null=False, on_delete=models.CASCADE, related_name='discipline_fk')
-    #user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='user_fk')
-"""
+# class StudentDiscipline(models.Model):
+#     discipline = models.ForeignKey(Discipline, null=False, on_delete=models.CASCADE, related_name='discipline_fk')
+#     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='user_fk')
+
