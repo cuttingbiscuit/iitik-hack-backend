@@ -2,6 +2,20 @@ from .models import *
 from rest_framework import serializers
 
 
+class GroupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
+class DisciplineSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Discipline
+        fields = '__all__'
+
+
 class ContentBlockSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -31,7 +45,9 @@ class ContentBlockListSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     task_fk = ContentBlockListSerializer(many=True)
+    discipline_fk = DisciplineSerializer()
+    group_fk = GroupSerializer()
 
     class Meta:
         model = Task
-        fields = ('id', 'discipline_name', 'group_name', 'task_fk')
+        fields = ('id', 'discipline_fk', 'group_fk', 'task_fk')
