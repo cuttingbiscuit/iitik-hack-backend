@@ -81,10 +81,3 @@ class TaskGroup(models.Model):
 # class StudentDiscipline(models.Model):
 #     discipline = models.ForeignKey(Discipline, null=False, on_delete=models.CASCADE, related_name='discipline_fk')
 #     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='user_fk')
-
-class Organization(models.Model):
-    name  = models.CharField(_('organization_name'), max_length=100)
-    code  = models.CharField(_('privilege_code'), max_length=25)
-    limit = models.IntegerField(_('limit'))
-    def __str__(self):
-        return "%s" % self.id

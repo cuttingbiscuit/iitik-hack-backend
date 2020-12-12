@@ -23,11 +23,10 @@ class GroupSerializer(serializers.ModelSerializer):
 class DisciplineSerializer(serializers.ModelSerializer):
 
     owner = UserSerializer()
-    users = UserSerializer(many=True)
 
     class Meta:
         model = Discipline
-        fields = ('id', 'name', 'owner', 'users')
+        fields = ('id', 'name', 'owner')
         
     def create(self, validated_data):
         return ContentBlock.objects.create(**validated_data)

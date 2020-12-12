@@ -23,6 +23,7 @@ class RegistrationAPIView(APIView):
         print(request.data)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        print(serializer)
         serializer.save()
 
         return Response(

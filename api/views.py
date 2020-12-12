@@ -8,6 +8,11 @@ class ContentBlockViewSet(viewsets.ModelViewSet):
     serializer_class = ContentBlockSerializer
     queryset = ContentBlock.objects.all()
 
+    def create(self, request):
+        print('QQQQQQQQQQQQQ')
+        print(request)
+        print(request.user)
+        return super().create(request)
 
 class ContentBlockListViewSet(viewsets.ModelViewSet):
 
@@ -34,6 +39,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         self.user = request.user
+        print(request)
         return super().create(request)
 
 

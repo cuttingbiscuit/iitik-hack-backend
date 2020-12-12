@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import Organization, User
 from django.contrib.auth import authenticate
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -16,15 +16,20 @@ class RegistrationSerializer(serializers.ModelSerializer):
         write_only=True,
     )
 
+    organization_key = serializers.CharField(max_length=25, min_length=25, write_only=True, required=False)
+
     # The client should not be able to send a token along with a registration
     # request. Making `token` read-only handles that for us.
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
         model = User
-        fields = ('email', 'name', 'surname', 'password', 'patronymic_name', 'token',)
+        fields = ('email', 'name', 'surname', 'password', 'patronymic_name', 'organization_key', 'token',)
 
     def create(self, validated_data):
+        print('validated_data')
+        print(validated_data)
+        # Organization.objects.get()
         return User.objects.create_user(**validated_data)
     
 
@@ -59,8 +64,6 @@ class LoginSerializer(serializers.Serializer):
             )
 
         user = authenticate(username=email, password=password)
-
-        print(user.id)
 
         if user is None:
             raise serializers.ValidationError(
