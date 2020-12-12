@@ -21,7 +21,6 @@ class Organization(models.Model):
     def __str__(self):
         return "%s" % self.name
 
-
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         _('email'),
