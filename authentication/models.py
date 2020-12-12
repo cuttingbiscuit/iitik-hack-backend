@@ -43,6 +43,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def  __str__(self):
         return self.name + ' ' + self.surname + ' ' + self.patronymic_name
     
+    def __init__(self, *args, **kwargs):
+        super(User, self).__init__(*args, **kwargs)
+    
     @property
     def token(self):
         """
