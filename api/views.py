@@ -1,21 +1,18 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, views
 from .serizalizers import *
 from rest_framework import generics
 from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.response import Response
-
+from rest_framework.parsers import FileUploadParser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class ContentBlockViewSet(viewsets.ModelViewSet):
 
     serializer_class = ContentBlockSerializer
     queryset = ContentBlock.objects.all()
 
-    def create(self, request):
-        print('QQQQQQQQQQQQQ')
-        print(request)
-        print(request.user)
-        return super().create(request)
 
 class TaskContentBlockListViewSet(viewsets.ModelViewSet):
 
@@ -40,6 +37,13 @@ class ReportViewSet(viewsets.ModelViewSet):
     serializer_class = ReportSerializer
     queryset = Report.objects.all()
 
+    @receiver(post_save, sender=Report)
+    def send_signal_to_tutor(self, sender, instance, created, **kwargs):
+        if created:
+            print('Report was created')
+            #Send signal to tutor
+
+    
 
 class TaskCommentViewSet(viewsets.ModelViewSet):
 
@@ -58,10 +62,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
 
-    def create(self, request):
-        self.user = request.user
-        print(request)
-        return super().create(request)
 
 class DisciplineViewSet(viewsets.ModelViewSet):
 
@@ -89,3 +89,35 @@ class StudentDisciplineViewSet(viewsets.ModelViewSet):
 class DisciplineStudentViewSet(viewsets.ModelViewSet):
     serializer_class = DisciplineStudentSerializer
     queryset = Discipline.objects.all() 
+
+
+class TaskFileUploadView(viewsets.ModelViewSet):
+    parser_classes = (FileUploadParser,)
+
+    def put(self, request, format=None):
+        f = request.data['file']
+        destination = open('/media/' + f.name, 'wb+')
+        for chunk in f.write(chunk):
+            destination.write(chunk)
+        destination.close()
+        content_block = ContentBlock(type='file', content='/media/' + f.name)
+        task = request.data['task']
+        task_content = TaskContentBlockList(content=content_block, task=task)
+        task_content.save()
+        return Response(status=204)
+
+
+class ReportFileUploadView(views.APIView):
+    parser_classes = (FileUploadParser,)
+
+    def put(self, request, format=None):
+        f = request.data['file']
+        destination = open('/media/' + f.name, 'wb+')
+        for chunk in f.write(chunk):
+            destination.write(chunk)
+        destination.close()
+        content_block = ContentBlock(type='file', content='/media/' + f.name)
+        report = request.data['report']
+        report_content = ReportContentBlockList(content=content_block, report=report)
+        report_content.save()
+        return Response(status=204)
