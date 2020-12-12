@@ -15,7 +15,7 @@ class Group(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, related_name='group_owner_fk', on_delete=models.CASCADE, editable=False)
     name = models.CharField(blank=False, null=False, max_length=150)
     discipline = models.ForeignKey(Discipline, null=False, on_delete=models.CASCADE, related_name='discipline_group_fk')
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='group_list', null=True)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='group_list_fk', null=True)
     def __str__(self):
         return "%s" % self.name
 
@@ -53,7 +53,7 @@ class Task(models.Model):
 
 class Report(models.Model):
     name = models.CharField(null=False, blank=False, max_length=150)
-    reciever = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_DEFAULT, null=False, blank=False, default=0, related_name='reciever_report_fk')
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_DEFAULT, null=False, blank=False, default=0, related_name='receiver_report_fk')
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False, blank=False, related_name='task_report_fk')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, blank=False, on_delete=models.CASCADE, related_name='own_reports_fk')
     STATUS = (
@@ -62,6 +62,7 @@ class Report(models.Model):
         ('NOT_OK', 'ok'),
     )
     RATING = (
+        ('0', '0'),
         ('1', '1'),
         ('2', '2'),
         ('3', '3'),
@@ -69,7 +70,7 @@ class Report(models.Model):
         ('5', '5'),
         )
     status = models.CharField(null=False, choices=STATUS, default='SENT', max_length=50)
-    rating = models.IntegerField(choices=RATING, blank=True)
+    rating = models.IntegerField(choices=RATING, blank=False)
 
     def __str__(self):
         return "%s" % self.name
