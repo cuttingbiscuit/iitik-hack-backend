@@ -31,7 +31,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         # 'rest_framework.permissions.AllowAny',
         # ) if DEBUG == True else (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
         ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'authentication.backends.JWTAuthentication',
@@ -138,12 +138,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-_PATH = os.path.abspath(os.path.dirname(__file__))
-
-MEDIA_ROOT = os.path.join(_PATH, 'files', 'media')
 MEDIA_URL = '/media/'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATIC_URL = '/static/'
+
 
 
 CHANNEL_LAYERS = {

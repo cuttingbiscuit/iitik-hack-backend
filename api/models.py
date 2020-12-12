@@ -31,8 +31,7 @@ class ContentBlock(models.Model):
         ('TEXT', 'text'),
     )
     type = models.CharField(null=False, max_length=100, choices=TYPE)
-    content = models.CharField(blank=False, null=False, max_length=300)
-
+    content = models.FileField(null=False)
     def __str__(self):
         return "%s" % self.id
 

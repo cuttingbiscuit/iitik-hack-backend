@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import url
 from .views import *
 from authentication.views import UserViewSet
 from rest_framework.routers import DefaultRouter
@@ -24,3 +25,4 @@ router.register(r'reports', ReportViewSet, basename='user')
 
 
 urlpatterns = router.urls
+urlpatterns += [url(r'^upload/$', TaskFileUploadView.as_view, name='user')]

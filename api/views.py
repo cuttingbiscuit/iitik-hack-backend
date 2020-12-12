@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.response import Response
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -94,30 +94,36 @@ class DisciplineStudentViewSet(viewsets.ModelViewSet):
 class TaskFileUploadView(viewsets.ModelViewSet):
     parser_classes = (FileUploadParser,)
 
-    def put(self, request, format=None):
+    def post(self, request, *args, **kwargs):
+        serializer = ContentBlockSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        else:
+            return Response(status=400)
+
+
+class ReportFileUploadView(viewsets.ModelViewSet):
+    parser_classes = (FileUploadParser,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ContentBlockSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        else:
+            return Response(status=400)
+
+
+"""    def put(self, request, format=None):
         f = request.data['file']
         destination = open('/media/' + f.name, 'wb+')
         for chunk in f.write(chunk):
             destination.write(chunk)
         destination.close()
-        content_block = ContentBlock(type='file', content='/media/' + f.name)
+        content_block = ContentBlock(type='file', content=f)
+        content_block.save()
         task = request.data['task']
         task_content = TaskContentBlockList(content=content_block, task=task)
         task_content.save()
-        return Response(status=204)
-
-
-class ReportFileUploadView(views.APIView):
-    parser_classes = (FileUploadParser,)
-
-    def put(self, request, format=None):
-        f = request.data['file']
-        destination = open('/media/' + f.name, 'wb+')
-        for chunk in f.write(chunk):
-            destination.write(chunk)
-        destination.close()
-        content_block = ContentBlock(type='file', content='/media/' + f.name)
-        report = request.data['report']
-        report_content = ReportContentBlockList(content=content_block, report=report)
-        report_content.save()
-        return Response(status=204)
+        return Response(status=204)"""

@@ -3,10 +3,6 @@ from rest_framework import serializers
 from authentication.serializers import UserSerializer
 from authentication.models import User
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = settings.AUTH_USER_MODEL
-        fields = '__all__'
 
 class GroupSerializer(serializers.ModelSerializer):
 
@@ -65,13 +61,13 @@ class ReportCommentSerializer(serializers.ModelSerializer):
 
 class TaskContentBlockListSerializer(serializers.ModelSerializer):
     content_type = serializers.CharField(source='content.type')
-    content_content = serializers.CharField(source='content.content')
-    comment_fk = TaskCommentSerializer(many=True)
+    content = ContentBlockSerializer()
+    task_comment_fk = TaskCommentSerializer(many=True)
     task_id = serializers.CharField(source='task.id')
 
     class Meta:
         model = TaskContentBlockList
-        fields = ('id', 'content_type', 'content_content', 'comment_fk', 'task_id')
+        fields = ('id', 'content_type', 'content', 'task_comment_fk', 'task_id')
 
     def create(self, validated_data):
         return TaskContentBlockList.objects.create(**validated_data)
@@ -80,7 +76,7 @@ class TaskContentBlockListSerializer(serializers.ModelSerializer):
 class ReportContentBlockListSerializer(serializers.ModelSerializer):
     content_type = serializers.CharField(source='content.type')
     content_content = serializers.CharField(source='content.content')
-    comment_fk = ReportCommentSerializer(many=True)
+    report_comment_fk = ReportCommentSerializer(many=True)
     report_id = serializers.CharField(source='report.id')
 
     class Meta:
