@@ -13,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .managers import UserManager
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         _('email'),

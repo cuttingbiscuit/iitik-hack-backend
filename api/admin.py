@@ -2,22 +2,34 @@ from django.contrib import admin
 from .models import *
 
 
-class ContentBlockListAdmin(admin.TabularInline):
-    model = ContentBlockList
+class TaskContentBlockListAdmin(admin.TabularInline):
+    model = TaskContentBlockList
+    extra = 1
+
+
+class ReportContentBlockListAdmin(admin.TabularInline):
+    model = ReportContentBlockList
     extra = 1
 
 
 class TaskAdmin(admin.ModelAdmin):
     inlines = [
-        ContentBlockListAdmin
+        TaskContentBlockListAdmin
+    ]
+
+
+class ReportAdmin(admin.ModelAdmin):
+    inlines = [
+        ReportContentBlockListAdmin
     ]
 
 
 admin.site.register(ContentBlock)
-admin.site.register(ContentBlockList)
+admin.site.register(TaskContentBlockList)
+admin.site.register(ReportContentBlockList)
 admin.site.register(Task, TaskAdmin)
-admin.site.register(Comment)
+admin.site.register(TaskComment)
+admin.site.register(ReportComment)
 admin.site.register(Discipline)
 admin.site.register(Group)
-#admin.site.register(StudentGroup)
-#admin.site.register(StudentDiscipline)
+admin.site.register(Report, ReportAdmin)

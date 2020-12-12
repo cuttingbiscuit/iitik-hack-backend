@@ -1,6 +1,9 @@
 from rest_framework import viewsets
 from .serizalizers import *
-
+from rest_framework import generics
+from rest_framework.decorators import action
+from rest_framework import permissions
+from rest_framework.response import Response
 
 
 class ContentBlockViewSet(viewsets.ModelViewSet):
@@ -9,10 +12,16 @@ class ContentBlockViewSet(viewsets.ModelViewSet):
     queryset = ContentBlock.objects.all()
 
 
-class ContentBlockListViewSet(viewsets.ModelViewSet):
+class TaskContentBlockListViewSet(viewsets.ModelViewSet):
 
-    serializer_class = ContentBlockListSerializer
-    queryset = ContentBlockList.objects.all()
+    serializer_class = TaskContentBlockListSerializer
+    queryset = TaskContentBlockList.objects.all()
+
+
+class ReportContentBlockListViewSet(viewsets.ModelViewSet):
+
+    serializer_class = ReportContentBlockListSerializer
+    queryset = ReportContentBlockList.objects.all()
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -21,20 +30,28 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
 
 
-class CommentViewSet(viewsets.ModelViewSet):
+class ReportViewSet(viewsets.ModelViewSet):
 
-    serializer_class = CommentSerializer
-    queryset = Comment.objects.all()
+    serializer_class = ReportSerializer
+    queryset = Report.objects.all()
+
+
+class TaskCommentViewSet(viewsets.ModelViewSet):
+
+    serializer_class = TaskCommentSerializer
+    queryset = TaskComment.objects.all()
+
+
+class ReportCommentViewSet(viewsets.ModelViewSet):
+
+    serializer_class = ReportCommentSerializer
+    queryset = ReportComment.objects.all()
 
 
 class GroupViewSet(viewsets.ModelViewSet):
 
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
-
-    def create(self, request):
-        self.user = request.user
-        return super().create(request)
 
 
 class DisciplineViewSet(viewsets.ModelViewSet):
