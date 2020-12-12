@@ -47,6 +47,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             # authenticate.
             return None
 
+
         elif len(auth_header) > 2:
             # Invalid token header. The Token string should not contain spaces.
             # Do not attempt to authenticate.

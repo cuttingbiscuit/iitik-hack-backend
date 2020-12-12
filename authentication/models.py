@@ -13,6 +13,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from .managers import UserManager
 
+class Organization(models.Model):
+    name  = models.CharField(_('organization_name'), max_length=100, unique=True)
+    code  = models.CharField(_('privilege_code'), max_length=25, unique=True)
+    limit = models.IntegerField(_('limit'))
+    expires_at = models.DateTimeField(default=None, blank=True, null=True)
+    def __str__(self):
+        return "%s" % self.name
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
@@ -26,14 +33,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     surname         = models.CharField(_('surname'), db_index=True, max_length=50, blank=False, null=False)
     patronymic_name = models.CharField(_('patronymic_name'), db_index=True, max_length=50, blank=True, null=False)
 
-    # organization_id = models.ForeignKey()
-    expires_at = models.DateTimeField(default=None, blank=True, null=True)
+    organization_id = models.ForeignKey(Organization, blank=True, null=True, on_delete=models.SET_NULL)
+    expires_at      = models.DateTimeField(default=None, blank=True, null=True)
+
+    @property
+    def is_expired(self):
+        if datetime.now > self.expires_at:
+            return True
+        return False
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ('name', 'surname')
+    REQUIRED_FIELDS = ('name', 'surname',)
 
     objects = UserManager()
 
