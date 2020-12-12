@@ -29,9 +29,15 @@ ALLOWED_HOSTS = ['*']
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
+<<<<<<< HEAD
         # 'rest_framework.permissions.AllowAny',
         # ) if DEBUG == True else (
         'rest_framework.permissions.AllowAny',
+=======
+        'rest_framework.permissions.AllowAny',
+        ) if DEBUG == True else (
+        'rest_framework.permissions.IsAuthenticated',
+>>>>>>> acd31b484a6f77c9bbdb38850e5774b1ba013724
         ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'authentication.backends.JWTAuthentication',

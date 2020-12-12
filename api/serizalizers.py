@@ -3,6 +3,13 @@ from rest_framework import serializers
 from authentication.serializers import UserSerializer
 from authentication.models import User
 
+<<<<<<< HEAD
+=======
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = settings.AUTH_USER_MODEL
+#         fields = '__all__'
+>>>>>>> acd31b484a6f77c9bbdb38850e5774b1ba013724
 
 class GroupSerializer(serializers.ModelSerializer):
 

@@ -27,9 +27,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ('email', 'name', 'surname', 'password', 'patronymic_name', 'organization_key', 'token',)
 
     def create(self, validated_data):
-        print('validated_data')
-        print(validated_data)
-        # Organization.objects.get()
+        code = validated_data['organization_key']
+        del validated_data['organization_key']
+        organization = Organization.objects.get(code=code)
+        validated_data['organization'] = organization
+
+        # думаю не нужно
+        # validated_data['expires_at'] = organization.expires_at
+
         return User.objects.create_user(**validated_data)
     
 
@@ -78,8 +83,22 @@ class LoginSerializer(serializers.Serializer):
         return {
             'token': user.token,
         }
-    
+
 class UserSerializer(serializers.ModelSerializer):
+    is_expired = serializers.ReadOnlyField()
+
     class Meta:
         model = User
         fields = '__all__'
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.name = validated_data.get('name', instance.name)
+        instance.surname = validated_data.get('surname', instance.surname)
+        instance.patronymic_name = validated_data.get('patronymic_name', instance.patronymic_name)
+        instance.expires_at = validated_data.get('expires_at', instance.expires_at)
+
+        
+
+        return instance
+

@@ -2,6 +2,7 @@ import jwt
 
 from datetime import datetime
 from datetime import timedelta
+from django.utils.timezone import now
 
 from django.conf import settings
 from django.db import models
@@ -18,6 +19,13 @@ class Organization(models.Model):
     code  = models.CharField(_('privilege_code'), max_length=25, unique=True)
     limit = models.IntegerField(_('limit'))
     expires_at = models.DateTimeField(default=None, blank=True, null=True)
+
+    @property
+    def is_expired(self):
+        if self.expires_at != None:
+            return now() > self.expires_at
+        return True
+
     def __str__(self):
         return "%s" % self.name
 
@@ -33,14 +41,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     surname         = models.CharField(_('surname'), db_index=True, max_length=50, blank=False, null=False)
     patronymic_name = models.CharField(_('patronymic_name'), db_index=True, max_length=50, blank=True, null=False)
 
-    organization_id = models.ForeignKey(Organization, blank=True, null=True, on_delete=models.SET_NULL)
-    expires_at      = models.DateTimeField(default=None, blank=True, null=True)
+    organization = models.ForeignKey(Organization, blank=True, null=True, on_delete=models.SET_NULL)
+    expires_at   = models.DateTimeField(default=None, blank=True, null=True)
 
     @property
     def is_expired(self):
-        if datetime.now > self.expires_at:
-            return True
-        return False
+        if self.organization != None:
+            return self.organization.is_expired
+
+        if self.expires_at != None:
+            return now() > self.expires_at
+        return True
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

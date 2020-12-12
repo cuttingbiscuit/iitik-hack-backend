@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User
+from .models import Organization, User
 from .serializers import LoginSerializer, UserSerializer
 from .serializers import RegistrationSerializer
 
@@ -52,8 +52,24 @@ class LoginAPIView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
 class UserViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+class CodePartialUpdateView(APIView):
+
+    def patch(self, request):
+        if 'code' not in request.data:
+            return Response('there is no \'code\' in body', status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        organization = Organization.objects.get(code=request.data['code'])
+
+        user.organization = organization
+        user.save()
+
+        print(user.organization)
+        
+        
+        return Response('Organization added', status=status.HTTP_200_OK)
