@@ -20,6 +20,7 @@ class RegistrationAPIView(APIView):
         Username, email, and password are required.
         Returns a JSON web token.
         """
+        print(request.data)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

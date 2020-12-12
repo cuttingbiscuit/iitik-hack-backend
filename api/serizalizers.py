@@ -1,12 +1,17 @@
 from .models import *
 from rest_framework import serializers
+from django.conf import settings
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = settings.AUTH_USER_MODEL
+        fields = '__all__'
 
 class GroupSerializer(serializers.ModelSerializer):
-
+    owner = UserSerializer()
     class Meta:
         model = Group
-        fields = '__all__'
+        fields = ('name', 'owner')
 
 
 class DisciplineSerializer(serializers.ModelSerializer):

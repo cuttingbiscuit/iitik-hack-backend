@@ -22,7 +22,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'name', 'surname', 'password', 'token',)
+        fields = ('email', 'name', 'surname', 'password', 'patronymic_name', 'token',)
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -59,6 +59,8 @@ class LoginSerializer(serializers.Serializer):
             )
 
         user = authenticate(username=email, password=password)
+
+        print(user.id)
 
         if user is None:
             raise serializers.ValidationError(

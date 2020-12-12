@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 class Discipline(models.Model):
     name = models.CharField(blank=False, null=False, max_length=300)
@@ -10,6 +11,7 @@ class Discipline(models.Model):
 
 class Group(models.Model):
     name = models.CharField(blank=False, null=False, max_length=150)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s" % self.name
@@ -70,3 +72,7 @@ class Comment(models.Model):
 #     discipline = models.ForeignKey(Discipline, null=False, on_delete=models.CASCADE, related_name='discipline_fk')
 #     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='user_fk')
 
+class Organization(models.Model):
+    name  = models.CharField(_('organization_name'), max_length=100)
+    code  = models.CharField(_('privilege_code'), max_length=25)
+    limit = models.IntegerField(_('limit'))
