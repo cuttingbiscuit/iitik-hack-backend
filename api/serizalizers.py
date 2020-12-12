@@ -1,19 +1,32 @@
 from .models import *
 from rest_framework import serializers
+from authentication.serializers import UserSerializer
 
 
 class GroupSerializer(serializers.ModelSerializer):
 
+    owner = UserSerializer()
+    users = UserSerializer(many=True)
+
     class Meta:
         model = Group
-        fields = '__all__'
+        fields = ('name', 'owner', 'users')
+
+    def create(self, validated_data):
+        return ContentBlock.objects.create(**validated_data)
 
 
 class DisciplineSerializer(serializers.ModelSerializer):
 
+    owner = UserSerializer()
+    users = UserSerializer(many=True)
+
     class Meta:
         model = Discipline
-        fields = '__all__'
+        fields = ('id', 'name', 'owner', 'users')
+        
+    def create(self, validated_data):
+        return ContentBlock.objects.create(**validated_data)
 
 
 class ContentBlockSerializer(serializers.ModelSerializer):
@@ -32,6 +45,9 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'content', 'begin', 'end')
 
+    def create(self, validated_data):
+        return ContentBlock.objects.create(**validated_data)
+
 
 class ContentBlockListSerializer(serializers.ModelSerializer):
     content_type = serializers.CharField(source='content.type')
@@ -42,12 +58,54 @@ class ContentBlockListSerializer(serializers.ModelSerializer):
         model = ContentBlockList
         fields = ('id', 'content_type', 'content_content', 'comment_fk')
 
+    def create(self, validated_data):
+        return ContentBlock.objects.create(**validated_data)
+
 
 class TaskSerializer(serializers.ModelSerializer):
     task_fk = ContentBlockListSerializer(many=True)
-    discipline_fk = DisciplineSerializer()
-    group_fk = GroupSerializer()
+    group = GroupSerializer()
+    discipline = DisciplineSerializer()
 
     class Meta:
         model = Task
-        fields = ('id', 'discipline_fk', 'group_fk', 'task_fk')
+        fields = ('id', 'discipline', 'group', 'task_fk')
+
+    def create(self, validated_data):
+        return ContentBlock.objects.create(**validated_data)
+
+
+class GroupStudentSerializer(serializers.ModelSerializer):
+
+    users = UserSerializer(many=True)
+
+    class Meta:
+        model = Group
+        fields = ('id', 'users')
+
+
+class StudentGroupSerializer(serializers.ModelSerializer):
+
+    group_list = GroupSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'name', 'group_list')
+
+
+class DisciplineStudentSerializer(serializers.ModelSerializer):
+    
+    discipline_group_fk = GroupStudentSerializer(many=True)
+
+    class Meta:
+        model = Discipline
+        fields = ('id', 'discipline_group_fk')
+
+
+class StudentDisciplineSerializer(serializers.ModelSerializer):
+    
+    discipline = serializers.CharField(source='discipline.name')
+
+    class Meta:
+        model = User
+        fields = ('id', 'name', 'discipline')
